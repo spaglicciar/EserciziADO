@@ -1,5 +1,5 @@
-﻿using System;
 ﻿using EserciziADO.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -14,6 +14,16 @@ namespace EserciziADO
         static void Main(string[] args)
         {
             InitDb();
+
+            var persone = DbHelper.GetPersone();
+            DataTable table = persone.Tables[0];
+
+            foreach (DataRow row in table.Rows)
+            {
+                {
+                    Console.WriteLine("{0} {1} {2} {3}", row[0], row[1], row[2], row[3]);
+                }
+            }
         }
 
         static void InitDb()
