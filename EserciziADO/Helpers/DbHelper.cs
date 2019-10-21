@@ -1,18 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace EserciziADO.Helpers
 {
-    public class DbHelper
+    public static class DbHelper
     {
-        public string ConnectionString { get; private set; }
-
-        public DbHelper(string connectionString)
+        private static SqlConnection connection;
+        public static SqlConnection Connection
         {
-            ConnectionString = connectionString;
+            get
+            {
+                if (connection == null)
+                {
+                    string connectionString = ConfigurationManager.AppSettings.Get("connectionString");
+                    connection = new SqlConnection(connectionString);
+                }
+                return connection;
+            }
         }
+
+
     }
 }
