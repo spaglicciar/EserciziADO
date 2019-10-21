@@ -24,6 +24,16 @@ namespace EserciziADO.Helpers
             }
         }
 
+        public static void CloseConnection()
+        {
+            if (connection != null)
+            {
+                connection.Close();
+                connection = null;
+            }
+        }
+
+
 
     }
 }
