@@ -6,18 +6,27 @@ using System.Threading.Tasks;
 
 namespace EserciziADO
 {
-    class Persona
+    public class Persona
     {
         public int Persona_ID { get; set; }
         public string Nome { get; set; }
         public string Cognome { get; set; }
         public DateTime DataDiNascita { get; set; }
 
+        public Persona()
+        {
+
+        }
+        public Persona(string nome, string cognome, DateTime dataDiNascita)
+        {
+            Nome = nome;
+            Cognome = cognome;
+            DataDiNascita = dataDiNascita;
+        }
+
         public override string ToString()
         {
             return string.Format("Nome: {0}, Cognome: {1}, Data di nascita: {2:d}", Nome, Cognome, DataDiNascita);
         }
-
-
     }
 }
