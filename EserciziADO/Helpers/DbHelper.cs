@@ -32,7 +32,32 @@ namespace EserciziADO.Helpers
             }
         }
 
+        public static DataSet GetPersone()
+        {
+            SqlCommand command = new SqlCommand("SELECT Persona_ID, Nome, Cognome, DataDiNascita FROM Persona", GetConnection());
+            DataSet persone = new DataSet();
 
+            SqlDataAdapter dataAdpater = new SqlDataAdapter(command);
+            dataAdpater.Fill(persone);
 
+            return persone;
+        }
+
+        public static void InsertPersona(Persona p)
+        {
+            SqlConnection conn = GetConnection();
+            SqlCommand command = new SqlCommand(
+                "INSERT INTO Persona (Persona_ID, Nome, Cognome, DataDiNascita) " +
+                "VALUES (@Persona_ID, @Nome, @Cognome, @DataDiNascita)", conn);
+
+            command.Parameters.Add("@Persona_ID", SqlDbType.UniqueIdentifier).Value = p.Persona_ID;
+            command.Parameters.Add("@Nome", SqlDbType.VarChar, 255).Value = p.Nome;
+            command.Parameters.Add("@Cognome", SqlDbType.VarChar, 255).Value = p.Cognome;
+            command.Parameters.Add("@DataDiNascita", SqlDbType.DateTime).Value = p.DataDiNascita;
+
+            conn.Open();
+            command.ExecuteNonQuery();
+            conn.Close();
+        }
     }
 }
