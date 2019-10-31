@@ -29,6 +29,7 @@ namespace EserciziADO
 
         #region Costruttori
         public Lavoratore()
+            : base()
         {
 
         }
@@ -38,6 +39,15 @@ namespace EserciziADO
             Retribuzione = retribuzione;
             DataDiAssunzione = dataAssunzione;
             Tipo = tipo;
+        }
+
+        public Lavoratore(string nome, string cognome, DateTime dataDiNascita, double retribuzione, DateTime? dataAssunzione, TipoLavoratore tipo, Guid persona_id)
+            : base(nome, cognome, dataDiNascita)
+        {
+            Retribuzione = retribuzione;
+            DataDiAssunzione = dataAssunzione;
+            Tipo = tipo;
+            Persona_ID = persona_id;
         }
         #endregion
 

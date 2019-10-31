@@ -12,7 +12,6 @@ namespace EserciziADO.Helpers
     public static class DbHelper
     {
         private static SqlConnection connection;
-
         private static SqlConnection GetConnection()
         {
             if (connection == null)
@@ -23,41 +22,128 @@ namespace EserciziADO.Helpers
             return connection;
         }
 
-        private static void CloseConnection()
+        public static int DeletePersona(Lavoratore l)
         {
-            if (connection != null)
+            int result = 0;
+
+            string deleteQuery =
+                "Delete from Lavoratori " +
+                "WHERE ID = @Persona_ID";
+
+            SqlCommand cmd = new SqlCommand
             {
-                connection.Close();
-                connection = null;
-            }
+                Connection = GetConnection(),
+                CommandType = CommandType.Text,
+                CommandText = deleteQuery
+            };
+
+            cmd.Parameters.AddWithValue("@Persona_ID", l.Persona_ID);
+
+            cmd.Connection.Open();
+            result = cmd.ExecuteNonQuery();
+            cmd.Connection.Close();
+
+            return result;
+        }
+
+        public static void SvuotaTabella(string tabella)
+        {
+            string deleteQuery =
+                string.Format("Delete from {0}", tabella);
+
+            SqlCommand cmd = new SqlCommand
+            {
+                Connection = GetConnection(),
+                CommandType = CommandType.Text,
+                CommandText = deleteQuery
+            };
+
+            cmd.Connection.Open();
+            cmd.ExecuteNonQuery();
+            cmd.Connection.Close();
+        }
+
+        public static int UpdatePersona(Lavoratore l)
+        {
+            int result = 0;
+
+            string updateQuery = 
+                "UPDATE Lavoratori SET " +
+                "Nome = @Nome, " +
+                "Cognome = @Cognome, " +
+                "DataDiNascita = @DataDiNascita, " +
+                "Retribuzione = @Retribuzione, " +
+                "DataDiAssunzione = @DataDiAssunzione, " +
+                "Tipo = @Tipo " +
+                "WHERE ID = @Persona_ID";
+
+            SqlCommand cmd = new SqlCommand
+            {
+                Connection = GetConnection(),
+                CommandType = CommandType.Text,
+                CommandText = updateQuery
+            };
+
+            cmd.Parameters.Add("@Nome", SqlDbType.NVarChar, 255).Value = l.Nome;
+            cmd.Parameters.Add("@Cognome", SqlDbType.NVarChar, 255).Value = l.Cognome;
+            cmd.Parameters.Add("@DataDiNascita", SqlDbType.DateTime).Value = l.DataDiNascita;
+            cmd.Parameters.Add("@Retribuzione", SqlDbType.Float).Value = l.Retribuzione;
+            cmd.Parameters.Add("@DataDiAssunzione", SqlDbType.DateTime).Value = l.DataDiAssunzione;
+            cmd.Parameters.Add("@Tipo", SqlDbType.Int).Value = l.Tipo;
+
+            cmd.Parameters.AddWithValue("@Persona_ID", l.Persona_ID);
+
+            cmd.Connection.Open();
+            result = cmd.ExecuteNonQuery();
+            cmd.Connection.Close();
+
+            return result;
+        }
+
+        public static void InsertPersona(Lavoratore l)
+        {
+            SqlCommand cmd = new SqlCommand
+            {
+                Connection = GetConnection(),
+
+                CommandType = CommandType.Text,
+
+                CommandText = "INSERT INTO Lavoratori" +
+                "(ID, Nome, Cognome, DataDiNascita, Retribuzione, DataDiAssunzione, Tipo) " +
+                "VALUES" +
+                "(@ID, @Nome, @Cognome, @DataDiNascita, @Retribuzione, @DataDiAssunzione, @Tipo)"
+            };
+
+            cmd.Parameters.Add("@ID", SqlDbType.UniqueIdentifier).Value = l.Persona_ID;
+            cmd.Parameters.Add("@Nome", SqlDbType.NVarChar, 255).Value = l.Nome;
+            cmd.Parameters.Add("@Cognome", SqlDbType.NVarChar, 255).Value = l.Cognome;
+            cmd.Parameters.Add("@DataDiNascita", SqlDbType.DateTime).Value = l.DataDiNascita;
+            cmd.Parameters.Add("@Retribuzione", SqlDbType.Float).Value = l.Retribuzione;
+            cmd.Parameters.Add("@DataDiAssunzione", SqlDbType.DateTime).Value = l.DataDiAssunzione;
+            cmd.Parameters.Add("@Tipo", SqlDbType.Int).Value = l.Tipo;
+
+            cmd.Connection.Open();
+
+            int result = cmd.ExecuteNonQuery();
+
+            cmd.Connection.Close();
+
+            Console.WriteLine("{0} rows affected!", result);
         }
 
         public static DataSet GetPersone()
         {
-            SqlCommand command = new SqlCommand("SELECT Persona_ID, Nome, Cognome, DataDiNascita FROM Persona", GetConnection());
-            DataSet persone = new DataSet();
+            DataSet result = new DataSet();
 
-            SqlDataAdapter dataAdpater = new SqlDataAdapter(command);
-            dataAdpater.Fill(persone);
+            string selectQuery = "SELECT ID, Nome, Cognome, DataDiNascita," +
+                "Retribuzione, DataDiAssunzione, Tipo FROM Lavoratori";
 
-            return persone;
-        }
+            SqlCommand cmd = new SqlCommand(selectQuery, GetConnection());
 
-        public static void InsertPersona(Persona p)
-        {
-            SqlConnection conn = GetConnection();
-            SqlCommand command = new SqlCommand(
-                "INSERT INTO Persona (Persona_ID, Nome, Cognome, DataDiNascita) " +
-                "VALUES (@Persona_ID, @Nome, @Cognome, @DataDiNascita)", conn);
+            SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+            adapter.Fill(result);
 
-            command.Parameters.Add("@Persona_ID", SqlDbType.UniqueIdentifier).Value = p.Persona_ID;
-            command.Parameters.Add("@Nome", SqlDbType.VarChar, 255).Value = p.Nome;
-            command.Parameters.Add("@Cognome", SqlDbType.VarChar, 255).Value = p.Cognome;
-            command.Parameters.Add("@DataDiNascita", SqlDbType.DateTime).Value = p.DataDiNascita;
-
-            conn.Open();
-            command.ExecuteNonQuery();
-            conn.Close();
+            return result;
         }
     }
 }

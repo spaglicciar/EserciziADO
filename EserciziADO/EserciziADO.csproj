@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1F7CD7D2-482C-47E9-A898-2EB4553F8BCA}</ProjectGuid>
+    <ProjectGuid>{01647F67-BB9F-4A5C-A77B-1C643BCB26F0}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>EserciziADO</RootNamespace>
     <AssemblyName>EserciziADO</AssemblyName>
